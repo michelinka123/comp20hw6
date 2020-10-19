@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset = "utf-8">
+	<title>Amicable Numbers Checker</title>
+</head>
+<body>
+	<h1>Welcome to Amicable Number Checker!</h1>
+	<div id="formInputs"></div>
+	<div id="TEST"></div>
+	<form>
+
+		<label>First Number:</label>
+		<input name="number1" id="number1" type="text" placeholder="Enter first number">
+
+		<label>Second Number:</label>
+		<input name="number2" id="number2" type="text" placeholder="Enter second number"> 
+
+		<input type="button" value="Submit" onclick="pressed()">
+
+	</form>
+	<script language="javascript">
+		window.addEventListener('load', function () 
+		{
+  			// alert("Page has fully loaded")
+		})
+	
+		function isValidInput(str) 
+		{
+			if (isNaN(str)) //value of the input is not a number --> invalid
+			{
+			 	return false; 
+			}
+			else
+			{
+				return (parseFloat(str) % 1 === 0 && parseInt(str) >= 0);
+				//Now we know the input is a number.
+				//In order for the input to be valid it must meet two conditions:
+				//	1) It must be a whole number, 2) It must be at least 0
+			}
+		}
+
+		function readAndDisplay()
+		{
+			var input1 = document.getElementById("number1").value;
+  			var input2 = document.getElementById("number2").value;
+			if(!isValidInput(input1) || !isValidInput(input2))
+			{
+				alert("One of the inputs is not valid! Please refresh the page and try again");
+			}
+
+			else
+			{
+				//copy inputs 1 and 2 to div
+				document.getElementsByTagName("div")[0].innerHTML=input1 + " " + input2;	
+
+				//display contents of div
+				var divContents = document.getElementById("formInputs").innerHTML; 
+				document.write("Your numbers: " + divContents + "<br>");
+				
+				return divContents;
+			}
+		}
+
+		function isFactor(num,possibleFactor)
+		{
+			if(num % possibleFactor == 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+
+		}
+
+		// ** TESTING **
+		// alert("isFactor(25,5) returns: " + isFactor(25,5));
+		// alert("isFactor(5,25) returns: " + isFactor(5,25));
+		// alert("isFactor(100,2) returns: " + isFactor(100,2));
+		// alert("isFactor(100,8) returns: " + isFactor(100,8));
+		// alert("isFactor(30,0) returns: " + isFactor(30,0));
+		// alert("isFactor(0,30) returns: " + isFactor(0,30));
+		// alert("isFactor(61,1) returns: " + isFactor(61,1));
+		// alert("isFactor(1,61) returns: " + isFactor(1,61));
+
+		function showArray(arr, divID)
+		{
+			var display = arr.toString();
+			window.onload = function() 
+			{
+				document.getElementById(divID).innerHTML = display;
+			}
+			return display;		
+		}
+
+		// ** TESTING **
+		// var testArr = [1,2,3,4];
+		// alert("showArray([1,2,3,4]: " + showArray(testArr,"test"));
+		// alert("showArray([54,68,12,3,9,70,3]): " + showArray([54,68,12,3,9,70,3],"test"));
+
+		function addArray(arr)
+		{
+			var i = 0;
+			var sum = 0;
+			for(i = 0; i<arr.length; i++)
+			{
+				sum = sum + arr[i];
+			}
+
+			return sum;
+		}
+
+		// ** TESTING **
+		// alert("addArray([1,2,3,4]): " + addArray([1,2,3,4]));
+		// alert("addArray([6,7,8,9]): " + addArray([6,7,8,9]));
+		// alert("addArray([-50,7,-23,1]): " + addArray([-50,7,-23,1]));
+
+		function getFactors(num)
+		{
+			if (num == 0)
+			{
+				alert("Every number is a factor of zero! Please refresh and input new number");
+				return;
+			}
+			if (num == 1)
+			{
+				alert("There is no factor of 1 excluding itself! Please refresh and input new number");
+				return;
+			}
+
+			else
+			{
+				var i;
+				var arr = [];
+					for (i = 0; i <= num; i++)
+					{
+						if(isFactor(num, i))
+						{
+							arr[arr.length] = i;
+						}
+					}
+
+			arr.pop(); //we want all factors excluding the number itself
+			return arr;
+			}
+		}
+
+		// ** TESTING **
+		// alert("Factors of 33: " + getFactors(33));
+		// alert("Factors of 0: " + getFactors(0));
+		// alert("Factors of 1: " + getFactors(1));
+
+		function pressed()
+		{
+			//reads nums from form and displays
+			var inputstr = readAndDisplay();
+
+			//parses input into two integers
+			var strArr = inputstr.split(" ");
+			var NumberOne = parseInt(strArr[0]);
+			var NumberTwo = parseInt(strArr[1]);
+
+			//get factors of each number
+			var FactorsofNumberOne = getFactors(NumberOne);
+			var FactorsofNumberTwo = getFactors(NumberTwo);
+	
+			//find sum of factors of each number
+			var FactorsSumOne = addArray(FactorsofNumberOne);
+			var FactorsSumTwo = addArray(FactorsofNumberTwo);
+
+			document.write("<h2>Results:</h2>");
+			//check if amicable
+			if(FactorsSumOne == NumberTwo && FactorsSumTwo == NumberOne)
+			{
+				document.write("The numbers " + NumberOne + " and " + NumberTwo + " are <strong>amicable</strong>");
+				document.write(" because the factors of " + NumberOne + " are [");
+				document.write(showArray(FactorsofNumberOne, "factors"));
+				document.write("] and sum to " + FactorsSumOne + "," + "<br>");
+				document.write("while the factors of " + NumberTwo + " are [");
+				document.write(showArray(FactorsofNumberTwo, "factors") + "] and sum to " + FactorsSumTwo);
+			}
+			else
+			{
+				document.write("The numbers " + NumberOne + " and " + NumberTwo + " are <strong>NOT amicable</strong>");
+				document.write(" because the factors of " + NumberOne + " are [");
+				document.write(showArray(FactorsofNumberOne, "factors"));
+				document.write("] and sum to " + FactorsSumOne + "," + "<br>");
+				document.write("while the factors of " + NumberTwo + " are [");
+				document.write(showArray(FactorsofNumberTwo, "factors") + "] and sum to " + FactorsSumTwo);
+			}
+		}
+
+	</script>		
+</body>
+</html>
